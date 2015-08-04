@@ -93,7 +93,13 @@ angular.module('ui.date', [])
                     throw new Error('ng-Model value must be a Date, or a String object with a date formatter - currently it is a ' + typeof date + ' - use ui-date-format to convert it from a string');
                 }
             }
-            element.datepicker('setDate', date);
+          if(opts.softRestriction){
+              // avoid bugs below.
+              // ex: when today=2015/08/04 value=2015/07/31 min=0, datepicker set view value(input.val) to 2015/08/04 but $modelView and $modelValue stay 2015/07/31
+              element.val(uiDateConverter.dateToString(attrs.uiDateFormat, date));
+          }else{
+              element.datepicker('setDate', date);
+          }
           };
         }
         // Check if the element already has a datepicker.
