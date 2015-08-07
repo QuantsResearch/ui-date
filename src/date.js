@@ -77,8 +77,8 @@ angular.module('ui.date', [])
           element.off('blur.datepicker').on('blur.datepicker', function() {
             if ( !showing ) {
               scope.$apply(function() {
-                element.datepicker('setDate', element.datepicker('getDate'));
-                setVal();
+                //element.datepicker('setDate', element.datepicker('getDate'));
+                //setVal();
               });
             }
           });
@@ -133,12 +133,16 @@ angular.module('ui.date', [])
     function dateToString(dateFormat, value){
         dateFormat = dateFormat || uiDateFormatConfig;
         if (value) {
-            if (dateFormat) {
-                return jQuery.datepicker.formatDate(dateFormat, value);
-            }
+            try {
+                if (dateFormat) {
+                    return jQuery.datepicker.formatDate(dateFormat, value);
+                }
 
-            if (value.toISOString) {
-                return value.toISOString();
+                if (value.toISOString) {
+                    return value.toISOString();
+                }
+            }catch(e){
+                return value;
             }
         }
         return null;
