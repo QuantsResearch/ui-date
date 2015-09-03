@@ -83,6 +83,22 @@ angular.module('ui.date', [])
             }
           });
 
+          // 入力のテキストボックスからスコープが外れた時の処理
+          // 使用ケース： element.change 時にユーザの入力値をフォーマットするなど
+          element.off("change").on("change", function(){
+            scope.$emit("uiDateChanged", {
+                value: element.val(), // 入力値
+                /**
+                 * モデルを変更するための callback。uiDateChanged イベントをバインドしている処理内から呼び出される。
+                 * @param value フォーマット後の値
+                 */
+                setModel: function(value){ //
+                    controller.$setViewValue(value); // view 上で値が変更された体にして directive に通知する。
+                    controller.$render(); // プログラム的にモデルを変更しているので、$render を明示的に呼び出す。
+                }
+            });
+          });
+
           // Update the date picker when the model changes
           controller.$render = function () {
             var date = controller.$modelValue;
